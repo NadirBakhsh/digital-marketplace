@@ -32,18 +32,21 @@ export const getPayloadClient = async ({ initOptions }: Args = {}) => {
   if (!cached.promise) {
     cached.promise = payload.init({
       secret: process.env.PAYLOAD_SECRET,
-      local: initOptions?.express ? true : false,
+      local: initOptions?.express ? false : true,
       ...(initOptions || {}),
     });
 
-    try {
-      cached.client = await cached.promise;
-    } catch (error: unknown) {
-      cached.promise = null;
 
-      throw error;
-    }
-
-    return cached.client;
   }
+
+
+  try {
+    cached.client = await cached.promise;
+  } catch (error: unknown) {
+    cached.promise = null;
+
+    throw error;
+  }
+  
+  return cached.client;
 };
